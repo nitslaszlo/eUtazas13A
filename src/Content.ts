@@ -22,9 +22,18 @@ export default class Content {
         res.write("<body><form><pre class='m-3'>");
 
         // Kezd a kódolást innen -->
-        
+
         // 1. feladat: adatok beolvasása, tárolása
         const megold: Megoldás = new Megoldás("utasadat.txt");
+
+        // 2. feladat:
+        res.write(`2. feladat\nA buszra ${megold.felszállókSzáma} utas akart felszállni.\n`);
+
+        // 3. feladat:
+        res.write(`3. feladat\nA buszra ${megold.érvénytelenFelszállás} utas nem szállhatott fel.\n`);
+        
+        // 4. feladat:
+        res.write(`4. feladat\nA legtöbb utas (${megold.maxKeresArray.maxFelszálló} fő) a ${megold.maxKeresArray.maxElsőMegálló} megállóban próbált felszállni.\n`); 
 
         // <---- Fejezd be a kódolást
 
