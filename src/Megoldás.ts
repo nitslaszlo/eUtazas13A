@@ -1,8 +1,7 @@
-import { match } from 'assert';
 import fs from "fs";
 import Felszállás from "./Felszállás";
-import FelszállásBérlet from './FelszállásBérlet';
-import FelszállásJegy from './FelszállásJegy';
+import FelszállásBérlet from "./FelszállásBérlet";
+import FelszállásJegy from "./FelszállásJegy";
 
 interface ImaxKeresés {
     maxFelszálló: number;
@@ -21,7 +20,7 @@ export default class Megoldás {
     }
 
     public get maxKeresArray(): ImaxKeresés {
-        const max: ImaxKeresés = {maxFelszálló: -1, maxElsőMegálló: -1};
+        const max: ImaxKeresés = { maxFelszálló: -1, maxElsőMegálló: -1 };
         const statArray: number[] = new Array(30).fill(0);
         this._utasadatok.forEach(i => {
             statArray[i.megállóSorszáma]++;
@@ -34,6 +33,34 @@ export default class Megoldás {
             }
         }
         return max;
+    }
+
+    public get maxKeresMap(): ImaxKeresés {
+        const max: ImaxKeresés = { maxFelszálló: -1, maxElsőMegálló: -1 };
+        const statMap: Map<number, number> = new Map<number, number>();
+        this._utasadatok.forEach(i => {
+            if (statMap.has(i.megállóSorszáma)) {
+                statMap.set(i.megállóSorszáma, (statMap.get(i.megállóSorszáma) as number) + 1);
+            } else {
+                statMap.set(i.megállóSorszáma, 1);
+            }
+        });
+        max.maxFelszálló = Math.max(...statMap.values());
+        for (const [key, value] of statMap) {
+            if (value === max.maxFelszálló) {
+                max.maxElsőMegálló = key;
+                break;
+            }
+        }
+        return max;
+    }
+
+    public get ingyenesenUtazók(): number {
+        return this._utasadatok.filter(x => x.ingyenesUtazás).length;
+    }
+
+    public get kedvezményesenUtazók(): number {
+        return this._utasadatok.filter(x => x.kedvezményesUtazás).length;
     }
 
     constructor(forrás: string) {
